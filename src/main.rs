@@ -12,7 +12,7 @@ fn main() {
 
     let module = device.create_shader_module(include_wgsl!("shader.wgsl"));
 
-    type BufferData = [f32; 32];
+    type BufferData = [u32; 1024];
     let buffer_size = mem::size_of::<BufferData>() as BufferAddress;
     let buffer = device.create_buffer(&BufferDescriptor {
         label: None,
@@ -89,5 +89,7 @@ fn main() {
 
     let view = slice.get_mapped_range();
     let data = bytemuck::from_bytes::<BufferData>(&view);
-    println!("result = {data:?}");
+    for chunk in data.chunks(32) {
+        println!("{chunk:?}");
+    }
 }
